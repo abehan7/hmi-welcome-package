@@ -1,3 +1,4 @@
+import { IDecodedDiscordToken } from "./src/interfaces/discordToken";
 import { IncomingMessage } from "http";
 import express from "express";
 
@@ -9,6 +10,7 @@ declare global {
         iat: number;
         exp: number;
       };
+      decodedDiscordToken: IDecodedDiscordToken;
     }
   }
 }

@@ -26,7 +26,6 @@
       </div>
       <div class="status__container">
         <div class="status__message">
-          <!-- <span>message || </span> -->
           <div></div>
         </div>
         <div class="status__wallet"></div>
@@ -39,7 +38,7 @@
   :root {
     --background: black;
     --color: white;
-    --primary: #00ffeb;
+    --primary: rgb(0, 255, 235);
 
     /* font-family: "Saira-Light"; */
   }
@@ -153,6 +152,9 @@
     flex-direction: column;
     padding: 1rem;
     visibility: hidden;
+
+    background: rgba(255, 255, 255, 0.2);
+
     /* width: 300px; */
     /* height: 300px; */
   }
@@ -170,6 +172,18 @@
   }
 </style>
 <script>
+  let accessToken;
+  let tokenType;
+  const init = async () => {
+    const fragment = new URLSearchParams(window.location.hash.slice(1));
+    const [_accessToken, _tokenType] = [
+      fragment.get("access_token"),
+      fragment.get("token_type"),
+    ];
+    [accessToken, tokenType] = [_accessToken, _tokenType];
+  };
+  init();
+
   const btn = document.querySelector(".bn5");
   btn.addEventListener("click", async () => {
     const account = await getAccount();
@@ -189,14 +203,11 @@
       const statusMsg = `${resultMsg}`;
       document.querySelector(".status__message > div").innerHTML = resultMsg;
     }
-    //     status
-    // message
-    // data
     console.log(result);
   });
 
   const getAccount = async () => {
-    if (!window.ethereum) return;
+    if (!window.ethereum) return console.log("No web3 detected");
 
     await window.ethereum.send("eth_requestAccounts");
     window.web3 = new Web3(window.ethereum);
@@ -213,13 +224,18 @@
 
   // account, signiture, message
   const fetchWallet = async (account, signiture, message) => {
+    // accessToken
+    // tokenType
+    if (!accessToken || !tokenType) return console.log("No access token");
+    const token = `${tokenType} ${accessToken}`;
     const url = `http://localhost:5000/verify/api/v1`;
     const data = {
       account,
       signiture,
       message,
     };
-    const response = await axios.post(url, data);
+    const headers = { headers: { Authorization: token } };
+    const response = await axios.post(url, data, headers);
     return response.data;
   };
 </script>
