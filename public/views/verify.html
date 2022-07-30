@@ -1,0 +1,225 @@
+<!-- TODO: 이제 여기서 디코 토큰 쿼리스트링으로 되어있는거 가지고와서 서버에서 인증하기
+  인증되면 이거 보여주고 인증 안됐으면 you're not authorized 보여주기 
+-->
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <script src="https://cdn.jsdelivr.net/npm/web3@latest/dist/web3.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Saira:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <section>
+      <span class="title">verify wallet</span>
+      <div class="btn__container">
+        <span class="bn5">verify</span>
+      </div>
+      <div class="status__container">
+        <div class="status__message">
+          <!-- <span>message || </span> -->
+          <div></div>
+        </div>
+        <div class="status__wallet"></div>
+      </div>
+    </section>
+  </body>
+</html>
+
+<style>
+  :root {
+    --background: black;
+    --color: white;
+    --primary: #00ffeb;
+
+    /* font-family: "Saira-Light"; */
+  }
+  body {
+    background: var(--background);
+    color: var(--color);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100vw;
+    height: 100vh;
+    padding: 0;
+    margin: 0;
+    /* font-size: 2rem; */
+    font-family: "Saira", sans-serif;
+  }
+  section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+  }
+  .btn__container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-bottom: 2rem;
+    /* flex: 1; */
+  }
+  .title {
+    padding-bottom: 1rem;
+    font-size: 1.5rem;
+    font-weight: 800;
+  }
+  .bn5 {
+    padding: 0.6em 2em;
+    border: none;
+    outline: none;
+    color: rgb(255, 255, 255);
+    background: #111;
+    cursor: pointer;
+    position: relative;
+    z-index: 0;
+    border-radius: 10px;
+  }
+
+  .bn5:before {
+    content: "";
+    background: linear-gradient(
+      45deg,
+      #ff0000,
+      #ff7300,
+      #fffb00,
+      #48ff00,
+      #00ffd5,
+      #002bff,
+      #7a00ff,
+      #ff00c8,
+      #ff0000
+    );
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    background-size: 400%;
+    z-index: -1;
+    filter: blur(5px);
+    width: calc(100% + 4px);
+    height: calc(100% + 4px);
+    animation: glowingbn5 20s linear infinite;
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+    border-radius: 10px;
+  }
+
+  @keyframes glowingbn5 {
+    0% {
+      background-position: 0 0;
+    }
+    50% {
+      background-position: 400% 0;
+    }
+    100% {
+      background-position: 0 0;
+    }
+  }
+
+  .bn5:before {
+    opacity: 1;
+  }
+
+  .bn5:after {
+    z-index: -1;
+    content: "";
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: #191919;
+    left: 0;
+    top: 0;
+    border-radius: 10px;
+  }
+
+  .status__container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* border: 1px solid #ccc; */
+    border-radius: 10px;
+    flex-direction: column;
+    padding: 1rem;
+    visibility: hidden;
+    /* width: 300px; */
+    /* height: 300px; */
+  }
+  .status__message {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+  }
+  .status__message > div {
+    color: var(--primary);
+  }
+  .status__wallet {
+    word-break: break-all;
+  }
+</style>
+<script>
+  const btn = document.querySelector(".bn5");
+  btn.addEventListener("click", async () => {
+    const account = await getAccount();
+    const { signiture, message } = await signAccount(account);
+    const result = await fetchWallet(account, signiture, message);
+    if (!result) return;
+    const { status, message: resultMsg, data } = result;
+    const statusContainer = document.querySelector(".status__container");
+    statusContainer.style.visibility = "visible";
+    if (status) {
+      const { wallet } = data;
+      const statusMsg = `${wallet} is verified`;
+      const statusWallet = `<div>${wallet}</div>`;
+      document.querySelector(".status__message > div").innerHTML = resultMsg;
+      document.querySelector(".status__wallet").innerHTML = statusWallet;
+    } else {
+      const statusMsg = `${resultMsg}`;
+      document.querySelector(".status__message > div").innerHTML = resultMsg;
+    }
+    //     status
+    // message
+    // data
+    console.log(result);
+  });
+
+  const getAccount = async () => {
+    if (!window.ethereum) return;
+
+    await window.ethereum.send("eth_requestAccounts");
+    window.web3 = new Web3(window.ethereum);
+
+    const accounts = await web3.eth.getAccounts();
+    const account = accounts[0];
+    return account;
+  };
+  const signAccount = async (account) => {
+    const message = `sign to verify your wallet ${account}`;
+    const signiture = await web3.eth.personal.sign(message, account);
+    return { signiture, message };
+  };
+
+  // account, signiture, message
+  const fetchWallet = async (account, signiture, message) => {
+    const url = `http://localhost:5000/verify/api/v1`;
+    const data = {
+      account,
+      signiture,
+      message,
+    };
+    const response = await axios.post(url, data);
+    return response.data;
+  };
+</script>

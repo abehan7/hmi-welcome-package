@@ -1,0 +1,76 @@
+{
+       channelId: '966594211212312616',
+       guildId: '965622452040400967',  
+       id: '967677759847559178',       
+       createdTimestamp: 1650782756531,
+       type: 'APPLICATION_COMMAND',
+       system: false,
+       content: '',
+       author: User {
+         id: '720351927581278219',
+         bot: true,
+         system: false,
+         flags: UserFlags { bitfield: 65536 },
+         username: 'Invite Tracker',
+         discriminator: '0478',
+         avatar: '7ac935300e9bc3edcbc2de1b91c597b1',
+         banner: undefined,
+         accentColor: undefined
+       },
+       pinned: false,
+       tts: false,
+       nonce: '967677758521999360',
+       embeds: [
+         MessageEmbed {
+           type: 'rich',
+           title: '**Abe#5318**',
+           description: 'You currently have **0** invites. (**1** regular, **0** left, **1** fake, **0** bonus)',
+           url: null,
+           color: 54491,
+           timestamp: null,
+           fields: [],
+           thumbnail: null,
+           image: null,
+           video: null,
+           author: null,
+           provider: null,
+           footer: [Object]
+         }
+       ],
+       components: [],
+       attachments: Collection(0) [Map] {},
+       stickers: Collection(0) [Map] {},
+       editedTimestamp: null,
+       reactions: ReactionManager { message: [Circular *1] },
+       mentions: MessageMentions {
+         everyone: false,
+         users: Collection(0) [Map] {},
+         roles: Collection(0) [Map] {},
+         _members: null,
+         _channels: null,
+         crosspostedChannels: Collection(0) [Map] {},
+         repliedUser: null
+       },
+       webhookId: '720351927581278219',
+       groupActivityApplication: null,
+       applicationId: '720351927581278219',
+       activity: null,
+       flags: MessageFlags { bitfield: 0 },
+       reference: null,
+       interaction: {
+         id: '967677758979313734',
+         type: 'APPLICATION_COMMAND',
+         commandName: 'invites',
+         user: User {
+           id: '869760005660880907',
+           bot: false,
+           system: false,
+           flags: [UserFlags],
+           username: 'Abe',
+           discriminator: '5318',
+           avatar: '7511f68359308dde4825bb3d0d90d11f',
+           banner: undefined,
+           accentColor: undefined
+         }
+       }
+     }
