@@ -1,11 +1,15 @@
 import axios from "axios";
 import { IUser } from "../interfaces";
+import { CheckWalletProps } from "../interfaces/api";
 import { createToken } from "../utils";
 
-const API = axios.create({ baseURL: process.env.API_BASE_URL });
+const api = axios.create({ baseURL: process.env.api_BASE_URL });
 
 export const fetchAddress = (user: IUser) =>
-  API.patch(`/user/${createToken(user.discord_id)}/whitelist`, user);
+  api.patch(`/user/${createToken(user.discord_id)}/whitelist`, user);
 
 export const fetchOGAddress = (user: IUser) =>
-  API.patch(`/user/${createToken(user.discord_id)}/og`, user);
+  api.patch(`/user/${createToken(user.discord_id)}/og`, user);
+
+export const getWalletInfo = (discord_id: string) =>
+  api.get(`/user/${createToken(discord_id)}`);

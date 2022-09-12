@@ -1,6 +1,6 @@
 import { Client } from "discord.js";
-import config from "./config";
-import * as commandModules from "./commands";
+import config from "../config";
+import * as commandModules from "../commands";
 
 const commands = Object(commandModules);
 
@@ -12,14 +12,15 @@ export const client = new Client({
 
 client.once("ready", () => console.log("Discord bot Ready!"));
 
+const wlCommandNames = ["whitelist", "check_wallet"];
+
 client.on("interactionCreate", async (interaction) => {
   if (!interaction.isCommand()) return;
   const { commandName } = await interaction;
   //
-  // channel.guild.members.cache.get(discord_id);
-  if ("whitelist" !== commandName) return;
+  if (!wlCommandNames.includes(commandName)) return;
 
-  "whitelist" === commandName &&
+  wlCommandNames.includes(commandName) &&
     (await commands[commandName].execute(interaction, client));
 });
 client.login(config.DISCORD_TOKEN);

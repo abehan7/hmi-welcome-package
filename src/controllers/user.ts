@@ -104,6 +104,31 @@ export const createOG = async (req: Request, res: Response) => {
   }
 };
 
+export const getWalletInfo = async (req: Request, res: Response) => {
+  try {
+    const { discord_id } = req.decodedData!;
+    const user = (await db.User.findOne({ discord_id })) as IUser | null;
+
+    const userTag = `${user?.username ?? "no name"}#${
+      user?.discriminator ?? "no discriminator"
+    }`;
+
+    console.log(`${userTag} || check-wallet command`);
+
+    if (!user)
+      return res
+        .status(200)
+        .send({ message: "user not found", status: false, data: null });
+
+    return res
+      .status(200)
+      .send({ message: "user found", status: true, data: user });
+  } catch (err) {
+    console.log(`smth went wrong in getWalletInfo`);
+    res.status(200).json({ message: "server error", status: false });
+  }
+};
+
 const modules = {
   isNotExistFn: async (userInfo: IUser, discord_id: string, res: Response) => {
     const update = { ...userInfo, discord_id };

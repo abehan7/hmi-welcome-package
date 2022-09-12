@@ -1,6 +1,6 @@
 import { Client } from "discord.js";
-import config from "./config";
-import * as msgCommandModules from "./msg_commands";
+import config from "../config";
+import * as msgCommandModules from "../msg_commands";
 
 const msgCommands = Object(msgCommandModules);
 const msgCommandsNames = Object.keys(msgCommands);

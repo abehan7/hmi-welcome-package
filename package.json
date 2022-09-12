@@ -12,7 +12,8 @@
     "botDev": "concurrently \"tsc -w\" \"nodemon build/bot-wl-slash.js\"",
     "deploy:commands": "tsc && node build/deploy-commands.js",
     "pm2Dev": "pm2-dev start ecosystem.config.js --interpreter node",
-    "verify-dev": "concurrently \"tsc -w\" \"nodemon build/services/verify-wallet-owner.js\""
+    "verify-dev": "concurrently \"tsc -w\" \"nodemon build/services/verify-wallet-owner.js\"",
+    "bot-wl-slash": "concurrently \"tsc -w\" \"nodemon build/services/bot-wl-slash\""
   },
   "keywords": [],
   "author": "",
